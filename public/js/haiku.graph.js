@@ -1,7 +1,7 @@
 var w = window,
     d = document,
     e = d.documentElement,
-    g = d.getElementsByTagName('body')[0];
+    g = d.getElementsByTagName("body")[0];
 
 width = w.innerWidth || e.clientWidth || g.clientWidth;
 height = w.innerHeight || e.clientHeight || g.clientHeight;
@@ -22,13 +22,25 @@ createSVG = () => {
 }
 
 chart = () => {
-    const links = data.links.map(d => Object.create(d));
-    const nodes = data.nodes.map(d => Object.create(d));
+    const links = data.links_a.map(d => Object.create(d));
+    const nodes = data.nodes_a.map(d => Object.create(d));
 
     const simulation = d3.forceSimulation(nodes)
-        .force("link", d3.forceLink(links).id(d => d.id))
-        .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force(
+            "link",
+            d3.forceLink(links)
+              .id(d => d.id)
+              .strength(0)
+              .distance(300)
+            )
+        .force(
+            "charge",
+            d3.forceManyBody()
+              .strength(-200)
+            )
+        .force(
+            "center",
+            d3.forceCenter(width / 2, height / 2))
         .on("tick", ticked);
 
     const svg = d3.select(createSVG());
@@ -41,31 +53,18 @@ chart = () => {
         .enter().append("line")
         .attr("stroke-width", d => Math.sqrt(d.value));
 
-    // const node = svg.append("g")
-    //     .attr("stroke", "#fff")
-    //     .attr("stroke-width", 1.5)
-    //     .selectAll("circle")
-    //     .data(nodes)
-    //     .enter().append("circle")
-    //     .attr("r", 5)
-    //     .attr("fill", color())
-    //     .call(drag(simulation));
-
     const node = svg.append("g")
         .selectAll("text")
         .data(nodes)
         .enter().append("text")
         .attr("font-family", "sans-serif")
-        .attr("font-size", 15)
-        .attr('style', 'text-transform: uppercase')
+        .attr("font-size", 25)
+        .attr("style", "text-transform: uppercase")
+        .attr("text-anchor", "middle")
         .text(d => d.id)
         .attr("fill", color())
+        .on("click", function() { clicked(this); })
         .call(drag(simulation));
-
-    console.log(node);
-
-    // node.append("title")
-    //     .text(d => d.id);
 
     function ticked() {
         link
@@ -75,10 +74,8 @@ chart = () => {
             .attr("y2", d => d.target.y);
 
         node
-            // .attr("cx", d => d.x)
             .attr("x", d => d.x)
-            // .attr("cy", d => d.y);
-            .attr("y", d => d.y);
+            .attr("y", d => d.y)
     }
 
     return svg.node();
@@ -87,6 +84,22 @@ chart = () => {
 color = () => {
     const scale = d3.scaleOrdinal(d3.schemeCategory10);
     return d => scale(d.group);
+}
+
+clicked = (thisEl) => {
+    var color = "#a00",
+        fontSize = 25;
+    var el = d3.select(thisEl);
+    var originalColor = el.attr("fill");
+    var originalFontSize = el.attr("font-size");
+
+    d3.select(thisEl)
+        .transition()
+            .attr("fill", color)
+            .attr("font-size", fontSize)
+        .transition()
+            .attr("fill", originalColor)
+            .attr("font-size", originalFontSize);
 }
 
 drag = simulation => {
@@ -123,4 +136,3 @@ xmlhttp.onreadystatechange = function () {
 }
 xmlhttp.open("GET", "public/js/dummy_data/miserables_sample.json", true);
 xmlhttp.send();
-
