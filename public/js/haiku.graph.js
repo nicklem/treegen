@@ -41,18 +41,31 @@ chart = () => {
         .enter().append("line")
         .attr("stroke-width", d => Math.sqrt(d.value));
 
+    // const node = svg.append("g")
+    //     .attr("stroke", "#fff")
+    //     .attr("stroke-width", 1.5)
+    //     .selectAll("circle")
+    //     .data(nodes)
+    //     .enter().append("circle")
+    //     .attr("r", 5)
+    //     .attr("fill", color())
+    //     .call(drag(simulation));
+
     const node = svg.append("g")
-        .attr("stroke", "#fff")
-        .attr("stroke-width", 1.5)
-        .selectAll("circle")
+        .selectAll("text")
         .data(nodes)
-        .enter().append("circle")
-        .attr("r", 5)
+        .enter().append("text")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", 15)
+        .attr('style', 'text-transform: uppercase')
+        .text(d => d.id)
         .attr("fill", color())
         .call(drag(simulation));
 
-    node.append("title")
-        .text(d => d.id);
+    console.log(node);
+
+    // node.append("title")
+    //     .text(d => d.id);
 
     function ticked() {
         link
@@ -62,8 +75,10 @@ chart = () => {
             .attr("y2", d => d.target.y);
 
         node
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y);
+            // .attr("cx", d => d.x)
+            .attr("x", d => d.x)
+            // .attr("cy", d => d.y);
+            .attr("y", d => d.y);
     }
 
     return svg.node();
@@ -71,7 +86,6 @@ chart = () => {
 
 color = () => {
     const scale = d3.scaleOrdinal(d3.schemeCategory10);
-    console.log(d.group);
     return d => scale(d.group);
 }
 
@@ -107,6 +121,6 @@ xmlhttp.onreadystatechange = function () {
         chart();
     }
 }
-xmlhttp.open("GET", "public/js/dummy_data/miserables.json", true);
+xmlhttp.open("GET", "public/js/dummy_data/miserables_sample.json", true);
 xmlhttp.send();
 
