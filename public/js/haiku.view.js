@@ -9,12 +9,15 @@ class HaikuView {
     // PUBLIC
 
     update(lastData, originElement) {
-        window.originElement = originElement;
+        const origin = {
+            x: originElement.x.baseVal[0].value,
+            y: originElement.y.baseVal[0].value
+        }
         const newLinks = lastData.links.map(d => Object.create(d));
         const newNodes = lastData.nodes.map(d => {
             let out = Object.create(d)
-            out.x = originElement.x.baseVal[0].value;
-            out.y = originElement.y.baseVal[0].value;
+            out.x = origin.x;
+            out.y = origin.y;
             return out;
         });
         let nodes = this._node.data().concat(newNodes);
@@ -47,6 +50,7 @@ class HaikuView {
     }
 
     _setSimulation(links, nodes) {
+
         let ticked = () => {
             this._link
                 .attr("x1", d => d.source.x)
@@ -63,19 +67,18 @@ class HaikuView {
             .force(
                 "link",
                 d3.forceLink(links)
-                    .strength(0.001)
+                    .strength(0.005)
                     .id(d => d.id)
             )
             .force(
                 "charge",
                 d3.forceManyBody()
-                    .distanceMin(50)
+                    .distanceMin(100)
                     .strength(-200)
             )
             .force(
                 "center",
                 d3.forceCenter(this._windowWidth / 2, this._windowHeight / 2)
-                    // .strength(10)
             )
             .on("tick", ticked);
     }
@@ -87,7 +90,7 @@ class HaikuView {
         return this;
     };
 
-    _redraw(links, nodes) {
+    _redraw(links, nodes, origin) {
         this._svg.selectAll("*").remove();
         this._SVGLinks(links);
         this._SVGNodes(nodes);
