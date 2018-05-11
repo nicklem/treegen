@@ -9,17 +9,15 @@ class HaikuView {
     // PUBLIC
 
     update(lastData, originElement) {
-        // const origin = {
-            // x: originElement.x.baseVal[0].value,
-            // y: originElement.y.baseVal[0].value
-        // }
+        const origin = {
+            x: originElement.x.baseVal[0].value,
+            y: originElement.y.baseVal[0].value
+        }
         const newLinks = lastData.links.map(d => Object.create(d));
         const newNodes = lastData.nodes.map(d => {
             let out = Object.create(d)
-            // out.x = origin.x;
-            out.x = this._windowWidth / 2;
-            // out.y = origin.y;
-            out.y = this._windowHeight / 2;
+            out.x = origin.x;
+            out.y = origin.y;
             return out;
         });
         let nodes = this._node.data().concat(newNodes);
