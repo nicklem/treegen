@@ -16,8 +16,10 @@ class HaikuView {
         const newLinks = lastData.links.map(d => Object.create(d));
         const newNodes = lastData.nodes.map(d => {
             let out = Object.create(d)
-            out.x = origin.x;
-            out.y = origin.y;
+            // out.x = origin.x;
+            out.x = this._windowWidth / 2;
+            // out.y = origin.y;
+            out.y = this._windowHeight / 2;
             return out;
         });
         let nodes = this._node.data().concat(newNodes);
