@@ -1,16 +1,14 @@
 class HaikuController {
     constructor() {
         this._model = new SampleHaikuModel();
-        this._view = new HaikuView(this._model);
-        console.log(this._model);
+        this._view = new HaikuView(this._model.data);
     }
 
     // PUBLIC
 
-    updateTree(originID) {
-        this._model.expandFrom(originID);
-        // TODO Fix redraw
-        this._view._init(this._model);
+    updateTree(originID, originElement) {
+        this._model.expand(originID);
+        this._view.update(this._model.lastData, originElement);
     }
 }
 
