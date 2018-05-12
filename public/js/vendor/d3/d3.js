@@ -5916,11 +5916,13 @@ function center$1(x, y) {
 
     for (sx = sx / n - x, sy = sy / n - y, i = 0; i < n; ++i) {
       node = nodes[i], node.x -= sx, node.y -= sy;
+      // node = nodes[i], node.x -= sx/100, node.y -= sy/100; // TODO CONFIRM EDIT
     }
   }
 
   force.initialize = function(_) {
-    nodes = _;
+    // nodes = _; // TODO CONFIRM EDIT
+    nodes = _.slice(Math.max(_.length - 4, 1))
   };
 
   force.x = function(_) {

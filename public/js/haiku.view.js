@@ -16,10 +16,10 @@ class HaikuView {
         const newLinks = lastData.links.map(d => Object.create(d));
         const newNodes = lastData.nodes.map(d => {
             let out = Object.create(d)
-            // out.x = origin.x;
-            out.x = this._windowWidth / 2;
-            // out.y = origin.y;
-            out.y = this._windowHeight / 2;
+            out.x = origin.x;
+            // out.x = this._windowWidth / 2;
+            out.y = origin.y;
+            // out.y = this._windowHeight / 2;
             return out;
         });
         let nodes = this._node.data().concat(newNodes);
@@ -69,14 +69,14 @@ class HaikuView {
             .force(
                 "link",
                 d3.forceLink(links)
-                    .strength(0.005)
+                    .strength(0.02)
                     .id(d => d.id)
             )
             .force(
                 "charge",
                 d3.forceManyBody()
                     .distanceMin(100)
-                    .strength(-200)
+                    .strength(-500)
             )
             .force(
                 "center",
@@ -92,12 +92,13 @@ class HaikuView {
         return this;
     };
 
-    _redraw(links, nodes, origin) {
+    _redraw(links, nodes, newNodes) {
+        this._setSimulation(links, nodes);
         this._svg.selectAll("*").remove();
         this._SVGLinks(links);
-        this._SVGNodes(nodes);
-        this._setSimulation(links, nodes);
-        this._simulation.restart();
+        // this._SVGNodes(newNodes);
+        this._SVGNodes(newNodes ? newNodes : nodes);
+        this._simulation.alphaTarget(0).restart();
     }
 
     _SVGLinks(links) {
@@ -135,7 +136,6 @@ class HaikuView {
     }
 
     _drag(simulation) {
-
         let dragstarted = (d) => {
             if (!d3.event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
