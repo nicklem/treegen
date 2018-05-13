@@ -76,10 +76,7 @@ class HaikuView {
                 "charge",
                 d3.forceManyBody()
                     .distanceMin(60)
-<<<<<<< HEAD
                     .distanceMax(1000)
-=======
->>>>>>> a3f8a6b3e9807c3e0e03167c2275d62a497cf950
                     .strength(-300)
             )
             .force(
