@@ -44,7 +44,7 @@ class SampleHaikuModel {
 
     _appendNodes(originID, startID) {
 
-        let maxID = startID + 3; // number of new words per round
+        let maxID = startID + 3; // number of new nodes per round
 
         for (let index = startID; index < maxID; index++) {
 

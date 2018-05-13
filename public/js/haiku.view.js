@@ -24,7 +24,7 @@ class HaikuView {
         });
         let nodes = this._node.data().concat(newNodes);
         let links = this._link.data().concat(newLinks);
-        this._redraw(links, nodes);
+        this._redraw(links, nodes, newNodes);
         return this;
     }
 
@@ -69,19 +69,35 @@ class HaikuView {
             .force(
                 "link",
                 d3.forceLink(links)
-                    .strength(0.02)
+                    .strength(0.08)
                     .id(d => d.id)
             )
             .force(
                 "charge",
                 d3.forceManyBody()
                     .distanceMin(100)
-                    .strength(-500)
+                    .strength(-400)
+            )
+            .force(
+                "collide",
+                d3.forceCollide()
+                    .radius(20)
+                    .strength(0.3)
             )
             .force(
                 "center",
                 d3.forceCenter(this._windowWidth / 2, this._windowHeight / 2)
             )
+            // .force(
+            //     "forceX",
+            //     d3.forceX(this._windowWidth / 2)
+            //         .strength(0.2)
+            // )
+            // .force(
+            //     "forceY",
+            //     d3.forceY(this._windowHeight / 2)
+            //         .strength(0.2)
+            // )
             .on("tick", ticked);
     }
 
@@ -96,9 +112,8 @@ class HaikuView {
         this._setSimulation(links, nodes);
         this._svg.selectAll("*").remove();
         this._SVGLinks(links);
-        // this._SVGNodes(newNodes);
-        this._SVGNodes(newNodes ? newNodes : nodes);
-        this._simulation.alphaTarget(0).restart();
+        this._SVGNodes(nodes);
+        this._simulation.alphaTarget(0.5).restart();
     }
 
     _SVGLinks(links) {

@@ -5915,14 +5915,14 @@ function center$1(x, y) {
     }
 
     for (sx = sx / n - x, sy = sy / n - y, i = 0; i < n; ++i) {
-      node = nodes[i], node.x -= sx, node.y -= sy;
-      // node = nodes[i], node.x -= sx/100, node.y -= sy/100; // TODO CONFIRM EDIT
+      // node = nodes[i], node.x -= sx, node.y -= sy;
+      node = nodes[i], node.x -= sx/10, node.y -= sy/10; // NICO
     }
   }
 
   force.initialize = function(_) {
-    // nodes = _; // TODO CONFIRM EDIT
-    nodes = _.slice(Math.max(_.length - 4, 1))
+    nodes = _;
+    // nodes = _.slice(Math.max(_.length - 4, 0)) // NICO
   };
 
   force.x = function(_) {
@@ -6892,7 +6892,8 @@ function x$2(x) {
   if (typeof x !== "function") x = constant$7(x == null ? 0 : +x);
 
   function force(alpha) {
-    for (var i = 0, n = nodes.length, node; i < n; ++i) {
+    // for (var i = 0, n = nodes.length, node; i < n; ++i) {
+    for (var i = 0, n = nodes.length - 3, node; i < n; ++i) { // NICO
       node = nodes[i], node.vx += (xz[i] - node.x) * strengths[i] * alpha;
     }
   }
