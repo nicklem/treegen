@@ -75,14 +75,15 @@ class HaikuView {
             .force(
                 "charge",
                 d3.forceManyBody()
-                    .distanceMin(100)
-                    .strength(-400)
+                    .distanceMin(60)
+                    .distanceMax(1000)
+                    .strength(-300)
             )
             .force(
                 "collide",
                 d3.forceCollide()
-                    .radius(20)
-                    .strength(0.3)
+                    .radius(50)
+                    .strength(0.1)
             )
             .force(
                 "center",
@@ -102,6 +103,9 @@ class HaikuView {
     }
 
     _render(data) {
+        let newText = data.nodes[0].text;
+        let textField = document.getElementById("textField");
+        textField.innerHTML = textField.innerHTML + " " + newText; 
         const links = data.links.map(d => Object.create(d));
         const nodes = data.nodes.map(d => Object.create(d));
         this._redraw(links, nodes);
@@ -113,7 +117,7 @@ class HaikuView {
         this._svg.selectAll("*").remove();
         this._SVGLinks(links);
         this._SVGNodes(nodes);
-        this._simulation.alphaTarget(0.5).restart();
+        this._simulation.alphaTarget(0.3).restart();
     }
 
     _SVGLinks(links) {
@@ -141,7 +145,7 @@ class HaikuView {
             .text(d => d.text)
             .attr("fill", this._color())
             .attr("id", d => d.id)
-            .on("click", this._dispatchClick)
+            .on("click", this._clickHandler)
             .call(this._drag(this._simulation));
     }
 
@@ -174,9 +178,15 @@ class HaikuView {
             .on("end", dragended);
     }
 
+    _updateTextField(text) {
+    }
     // EVENT DISPATCH
 
-    _dispatchClick() {
+    _clickHandler() {
+        let newText = this.innerHTML;
+        let textField = document.getElementById("textField");
+        textField.innerHTML = textField.innerHTML + " " + newText; 
+
         let originID = parseInt(
             d3.select(this).attr("id").split("_")[1]
         );
