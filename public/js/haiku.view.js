@@ -66,6 +66,7 @@ class HaikuView {
         }
 
         this._simulation = d3.forceSimulation(nodes)
+            // .alphaTarget(0.1)
             .force(
                 "link",
                 d3.forceLink(links)
@@ -112,12 +113,12 @@ class HaikuView {
         return this;
     };
 
-    _redraw(links, nodes, newNodes) {
+    _redraw(links, nodes) {
         this._setSimulation(links, nodes);
         this._svg.selectAll("*").remove();
         this._SVGLinks(links);
         this._SVGNodes(nodes);
-        this._simulation.alphaTarget(0.3).restart();
+        this._simulation.alphaTarget(1).restart();
     }
 
     _SVGLinks(links) {
